@@ -6,9 +6,15 @@ const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
 const tokenRoutes = require('./routes/tokenRoutes');
 const userRoutes = require('./routes/userRoutes');
+const connectToDatabase = require('./config/db');
 
 // Apply middleware configurations
 expressConfig(app);
+
+// Connect to the database
+const dbConnection = connectToDatabase('main');
+console.log("App ============================================== ",process.env.DATABASE_URI)
+
 
 // Define routes
 app.use('/api/auth', authRoutes);

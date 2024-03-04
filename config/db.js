@@ -1,20 +1,41 @@
 const mongoose = require('mongoose');
 const { DATABASE_URI } = process.env;
 
-mongoose.connect(DATABASE_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+// Maintain a reference to the connected instances
+const connectedInstances = {};
+console.log("DB ============================================== ", process.env.DATABASE_URI);
 
-const db = mongoose.connection;
+const connectToDatabase = async (instanceName = 'default') => {
+  // Check if the connection for this instance already exists
+  if (connectedInstances[instanceName]) {
+    console.log(`Using existing connection for instance: ${instanceName}`);
+    return connectedInstances[instanceName];
+  }
 
-db.on('error', (err) => {
-  console.error(`MongoDB connection error: ${err}`);
-  process.exit(1);
-});
+  try {
+    const connection = await mongoose.connect(DATABASE_URI);
 
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+    console.log(`Connected to MongoDB for instance: ${instanceName}`);
+
+    // Save the connection instance for reuse
+    connectedInstances[instanceName] = connection;
+
+    // Handle disconnection events
+    connection.connection.on('disconnected', () => {
+      console.log(`MongoDB connection for instance ${instanceName} disconnected`);
+      delete connectedInstances[instanceName];
+    });
+
+    // Handle errors
+    connection.connection.on('error', (error) => {
+      console.error(`MongoDB connection error for instance ${instanceName}: ${error}`);
+    });
+
+    return connection;
+  } catch (error) {
+    console.error(`MongoDB connection error for instance ${instanceName}: ${error}`);
+    process.exit(1);
+  }
+};
+
+module.exports = connectToDatabase;

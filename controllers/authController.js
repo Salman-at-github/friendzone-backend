@@ -1,12 +1,9 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const authService = require('../services/authService');
-const { handleValidationErrors } = require('../config/validation');
 
 const signup = async (req, res) => {
   try {
-    handleValidationErrors(req, res);
-
     const { name, email, password } = req.body;
 
     // Check if the email is already registered
@@ -26,17 +23,15 @@ const signup = async (req, res) => {
     const { accessToken, refreshToken } = authService.generateTokens(newUser._id);
 
     // Respond with success and tokens
-    res.json({ message: 'Signup successful', accessToken, refreshToken });
+    return res.json({ message: 'Signup successful', accessToken, refreshToken });
   } catch (error) {
     console.error('Error in signup:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const login = async (req, res) => {
   try {
-    handleValidationErrors(req, res);
-
     const { email, password, googleId, googleName, googleEmail } = req.body;
 
     // If Google ID is present, handle Google login
@@ -74,11 +69,13 @@ const login = async (req, res) => {
     const { accessToken, refreshToken } = authService.generateTokens(user._id);
 
     // Respond with success and tokens
-    res.json({ message: 'Login successful', accessToken, refreshToken });
+    return res.json({ message: 'Login successful', accessToken, refreshToken });
   } catch (error) {
     console.error('Error in login:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 module.exports = { signup, login };
+
+

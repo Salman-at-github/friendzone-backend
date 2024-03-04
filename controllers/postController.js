@@ -4,6 +4,8 @@ const { paginateResults } = require('../utils/paginator');
 const getPosts = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
+    const parsedPage = parseInt(page);
+    const parsedLimit = parseInt(limit);
 
     // Fetch all posts count
     const totalPostsCount = await Post.countDocuments();
@@ -11,15 +13,15 @@ const getPosts = async (req, res) => {
     // Paginate and fetch posts
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .skip((parsedPage - 1) * parsedLimit)
+      .limit(parsedLimit);
 
     // Use the paginator utility to structure the paginated results
-    const paginatedResults = paginateResults(page, limit, posts);
+    const paginatedResults = paginateResults(parsedPage, parsedLimit, posts, totalPostsCount);
 
     // Attach additional metadata to the response
     paginatedResults.totalPosts = totalPostsCount;
-    paginatedResults.currentPage = page;
+    paginatedResults.currentPage = parsedPage;
 
     // Respond with the paginated posts
     res.json(paginatedResults);
