@@ -12,8 +12,7 @@ const connectToDatabase = require('./config/db');
 expressConfig(app);
 
 // Connect to the database
-const dbConnection = connectToDatabase('main');
-console.log("App ============================================== ",process.env.DATABASE_URI)
+connectToDatabase('main');
 
 
 // Define routes

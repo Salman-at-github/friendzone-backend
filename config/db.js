@@ -3,7 +3,6 @@ const { DATABASE_URI } = process.env;
 
 // Maintain a reference to the connected instances
 const connectedInstances = {};
-console.log("DB ============================================== ", process.env.DATABASE_URI);
 
 const connectToDatabase = async (instanceName = 'default') => {
   // Check if the connection for this instance already exists
