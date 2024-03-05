@@ -2,10 +2,10 @@ const User = require('../models/User');
 
 const getUserById = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.user;
 
-    // Fetch user by ID
-    const user = await User.findById(userId);
+    // Fetch user by ID, excluding the password and _id fields
+    const user = await User.findById(userId).select('-password -_id');
 
     // Respond with the user data
     res.json(user);
