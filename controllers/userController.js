@@ -5,7 +5,7 @@ const getUserById = async (req, res) => {
     const { userId } = req.user;
 
     // Fetch user by ID, excluding the password and _id fields
-    const user = await User.findById(userId).select('-password -_id');
+    const user = await User.findById(userId).select('-password');
 
     // Respond with the user data
     res.json(user);
