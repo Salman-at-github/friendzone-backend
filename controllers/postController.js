@@ -3,7 +3,7 @@ const { paginateResults } = require('../utils/paginator');
 
 const getPosts = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 6 } = req.query;
     const parsedPage = parseInt(page);
     const parsedLimit = parseInt(limit);
 
