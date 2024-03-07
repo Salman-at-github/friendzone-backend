@@ -33,11 +33,11 @@ const getPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, author } = req.body;
     const { userId } = req.user; // Extract user ID from the authenticated user
 
     // Create a new post associated with the user
-    const newPost = new Post({ title, content, user: userId });
+    const newPost = new Post({ title, content, user: userId, author : author });
     await newPost.save();
 
     // Respond with success

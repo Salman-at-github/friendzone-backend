@@ -15,6 +15,10 @@ const postSchema = new Schema({
     ref: 'User',
     required: true,
   },
+  author: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

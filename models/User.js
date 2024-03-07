@@ -18,6 +18,12 @@ const userSchema = new Schema({
   googleId: String,
   googleName: String,
   googleEmail: String,
+  // Fields for email verification (only for local signup)
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
 });
 
 const User = mongoose.model('User', userSchema);
